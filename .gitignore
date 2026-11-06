@@ -1,0 +1,21 @@
+# Données personnelles : ne jamais publier
+mes_donnees/
+instagram-*/
+*.zip
+
+# Au cas où ces fichiers se retrouveraient à la racine
+/reseau_instagram.html
+/alias.csv
+/etiquettes.csv
+/stories_plus.csv
+/historique.json
+
+# Démonstration : seul le générateur et la page fictive sont publiés
+demo/export_fictif/
+demo/sortie/*
+!demo/sortie/reseau_instagram.html
+
+# Divers
+__pycache__/
+*.pyc
+.claude/

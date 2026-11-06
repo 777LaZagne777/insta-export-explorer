@@ -1,0 +1,1023 @@
+﻿<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mon réseau Instagram</title>
+<style>
+:root {
+  color-scheme: light;
+  --page:#f9f9f7; --surface:#fcfcfb; --ink:#0b0b0b; --ink2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10); --wash:rgba(11,11,11,.05);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4; --s6:#008300; --neutral:#898781;
+}
+.timebar { display:flex; gap:10px; align-items:center; padding:8px 12px; border-top:1px solid var(--grid); font-size:12.5px; }
+.timebar input { flex:1; min-width:80px; }
+.timebar button { font:inherit; height:28px; padding:0 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer; white-space:nowrap; }
+.timebar .m { color:var(--muted); white-space:nowrap; }
+.timebar .tout { min-width:120px; font-weight:600; white-space:nowrap; }
+.split { display:flex; gap:2px; height:10px; width:120px; margin-top:4px; }
+.split span { height:100%; min-width:1px; }
+.split span:first-child { border-radius:4px 0 0 4px; }
+.split span:last-child { border-radius:0 4px 4px 0; }
+.chips { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0 4px; }
+.chips span { font-size:12.5px; padding:3px 9px; border-radius:999px; border:1px solid var(--border); }
+details.more { margin:6px 0; }
+details.more summary { cursor:pointer; }
+details.more p { color:var(--ink2); margin:6px 0 0; max-width:110ch; }
+.listwrap { overflow:auto; }
+.list th, .list td { padding:7px 10px; border-bottom:1px solid var(--grid); text-align:left; vertical-align:top; }
+.list th { font-weight:600; color:var(--ink2); font-size:12.5px; white-space:nowrap; }
+.list td.who { white-space:nowrap; }
+.list td.who button { font:inherit; font-weight:600; color:inherit; background:none; border:0; padding:0; cursor:pointer; }
+.list td.who button:hover { text-decoration:underline; }
+.list .m { color:var(--ink2); }
+.list a { color:inherit; white-space:nowrap; }
+.list a.btn { display:inline-block; padding:3px 10px; border:1px solid var(--axis); border-radius:8px; text-decoration:none; font-size:12.5px; background:var(--surface); }
+.list a.btn:hover { background:var(--wash); }
+.list tr.fait { opacity:.45; }
+.list tr.fait td.who button { text-decoration:line-through; }
+.section { margin-bottom:12px; }
+ul.bilan { margin:6px 0 10px; padding-left:20px; max-width:90ch; }
+ul.bilan li { margin:5px 0; }
+.concl { margin:10px 0 0; max-width:90ch; font-weight:600; }
+pre { background:var(--wash); padding:10px 12px; border-radius:6px; overflow:auto; font-size:12.5px; }
+.stories svg { display:block; width:100%; height:auto; }
+.stories .bar { fill:var(--s1); }
+.stories .hit { fill:transparent; }
+.stories .hit:hover { fill:var(--wash); }
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19; --ink:#f0efec; --ink2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10); --wash:rgba(255,255,255,.06);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  }
+}
+* { box-sizing: border-box; }
+body { margin:0; background:var(--page); color:var(--ink); font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif; }
+main { max-width:1240px; margin:0 auto; padding:24px 16px 48px; }
+h1 { font-size:22px; margin:0 0 2px; }
+h2 { font-size:15px; margin:0 0 4px; }
+h3 { font-size:13.5px; margin:14px 0 2px; }
+.sub { color:var(--ink2); margin:0 0 16px; }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px; }
+.kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:14px; }
+.kpi .v { font-size:26px; font-weight:650; line-height:1.1; }
+.kpi .l { color:var(--ink2); font-size:12.5px; }
+.notice { border-left:3px solid var(--ink2); background:var(--wash); padding:10px 12px; border-radius:6px; margin-bottom:14px; color:var(--ink2); }
+.tabs { display:flex; gap:4px; flex-wrap:wrap; margin-bottom:12px; border-bottom:1px solid var(--grid); }
+.tabs button { font:inherit; background:none; border:0; border-bottom:2px solid transparent; padding:8px 12px; color:var(--ink2); cursor:pointer; }
+.tabs button[aria-selected="true"] { color:var(--ink); border-bottom-color:var(--ink); font-weight:600; }
+.panel[hidden] { display:none; }
+.filters { display:flex; flex-wrap:wrap; gap:8px 10px; align-items:center; margin-bottom:12px; }
+.chip { font:inherit; font-size:12.5px; display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px; border:1px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer; }
+.chip[aria-pressed="false"] { opacity:.45; text-decoration:line-through; }
+.chip .n { color:var(--muted); }
+.sw { width:10px; height:10px; border-radius:50%; display:inline-block; flex:none; }
+.sw.hollow { background:var(--surface); border:1.5px solid var(--neutral); }
+.sw.sq { border-radius:2px; }
+input[type=search] { font:inherit; padding:5px 10px; border-radius:8px; border:1px solid var(--axis); background:var(--surface); color:var(--ink); min-width:190px; }
+label.rng { display:inline-flex; align-items:center; gap:6px; color:var(--ink2); font-size:12.5px; }
+.graphwrap { display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:14px; align-items:start; }
+@media (max-width:900px) { .graphwrap { grid-template-columns:1fr; } }
+.stage { position:relative; padding:0; overflow:hidden; }
+#graph { display:block; width:100%; height:auto; aspect-ratio:1080/960; touch-action:none; cursor:grab; }
+#graph.drag { cursor:grabbing; }
+.zoom { position:absolute; right:10px; top:10px; display:flex; gap:4px; }
+.zoom button { font:inherit; width:30px; height:30px; border-radius:8px; border:1px solid var(--border); background:var(--surface); color:var(--ink); cursor:pointer; }
+.zoom button.w { width:auto; padding:0 10px; }
+.count { position:absolute; left:12px; top:12px; color:var(--muted); font-size:12px; }
+.node { cursor:pointer; }
+.node .dot { stroke:var(--surface); stroke-width:1.5; }
+.node.close .dot { stroke:var(--ink); stroke-width:2; }
+.node.hollow .dot { fill:var(--surface); stroke:var(--neutral); }
+.node.sel .halo { stroke:var(--ink); stroke-width:2; fill:none; }
+.node.dim { opacity:.12; }
+.lbl { font-size:11px; fill:var(--ink); paint-order:stroke; stroke:var(--surface); stroke-width:3px; stroke-linejoin:round; pointer-events:none; }
+.guide { fill:none; stroke:var(--grid); stroke-width:1; }
+.guidetxt { font-size:10px; fill:var(--muted); paint-order:stroke; stroke:var(--surface); stroke-width:3px; }
+.edge { stroke:var(--muted); fill:none; }
+.glink { stroke:var(--ink2); stroke-width:1.2; stroke-dasharray:4 4; fill:none; opacity:.7; }
+#tip { position:fixed; z-index:10; pointer-events:none; background:var(--surface); color:var(--ink); border:1px solid var(--border); box-shadow:0 4px 14px rgba(0,0,0,.14); border-radius:8px; padding:8px 10px; font-size:12.5px; max-width:300px; display:none; }
+#tip b { display:block; }
+#tip .m { color:var(--ink2); }
+.detail h2 { font-size:17px; word-break:break-word; }
+.detail a { color:inherit; }
+.detail .nm { color:var(--ink2); margin:0 0 8px; }
+.badges { display:flex; flex-wrap:wrap; gap:6px; margin:8px 0 10px; }
+.badge { font-size:12px; padding:2px 8px; border-radius:999px; border:1px solid var(--border); display:inline-flex; gap:6px; align-items:center; }
+.detail p { margin:6px 0; }
+table { border-collapse:collapse; width:100%; }
+.detail table td { padding:3px 0; border-bottom:1px solid var(--grid); }
+.detail table td:last-child { text-align:right; font-variant-numeric:tabular-nums; }
+.detail .cap { color:var(--muted); font-size:12px; margin-top:12px; }
+.legend { display:flex; flex-wrap:wrap; gap:6px 14px; color:var(--ink2); font-size:12.5px; margin:0 0 12px; }
+.legend span { display:inline-flex; align-items:center; gap:6px; }
+.bars { display:grid; grid-template-columns:minmax(110px,190px) minmax(0,1fr) 52px; gap:5px 10px; align-items:center; }
+.bars .who { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:right; }
+.bars .who button { font:inherit; color:inherit; background:none; border:0; padding:0; cursor:pointer; }
+.bars .who button:hover { text-decoration:underline; }
+.bars .track { display:flex; gap:2px; height:16px; }
+.bars .seg { height:100%; min-width:1px; }
+.bars .seg:last-child { border-radius:0 4px 4px 0; }
+.bars .val { font-variant-numeric:tabular-nums; color:var(--ink2); }
+.chrono svg { display:block; width:100%; height:auto; }
+.chrono .bar { fill:var(--s1); }
+.chrono .hit { fill:transparent; }
+.chrono .hit:hover { fill:var(--wash); }
+.axis-t { font-size:11px; fill:var(--muted); font-variant-numeric:tabular-nums; }
+.tablewrap { overflow:auto; max-height:70vh; }
+#table th, #table td { padding:6px 10px; border-bottom:1px solid var(--grid); text-align:left; white-space:nowrap; }
+#table th { position:sticky; top:0; background:var(--surface); cursor:pointer; user-select:none; font-weight:600; }
+#table td.num, #table th.num { text-align:right; font-variant-numeric:tabular-nums; }
+#table tbody tr { cursor:pointer; }
+#table tbody tr:hover { background:var(--wash); }
+details.how { margin-top:14px; color:var(--ink2); }
+details.how summary { cursor:pointer; color:var(--ink); font-weight:600; }
+details.how ul { margin:8px 0 0; padding-left:20px; }
+.empty { padding:40px 16px; text-align:center; color:var(--ink2); }
+</style>
+</head>
+<body>
+<main id="app"></main>
+<div id="tip"></div>
+<script>
+const D = /*__DONNEES__*/null;
+</script>
+<script>
+(function () {
+'use strict';
+const NS = 'http://www.w3.org/2000/svg';
+const $ = (q, r = document) => r.querySelector(q);
+function h(tag, attrs, ...kids) {
+  const e = document.createElement(tag);
+  for (const k in (attrs || {})) {
+    const v = attrs[k];
+    if (v == null || v === false) continue;
+    if (k === 'class') e.className = v;
+    else if (k === 'style') e.style.cssText = v;
+    else if (k.startsWith('on')) e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  kids.flat(3).forEach(c => { if (c != null && c !== false) e.append(c); });
+  return e;
+}
+function s(tag, attrs, ...kids) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in (attrs || {})) if (attrs[k] != null) e.setAttribute(k, attrs[k]);
+  kids.flat(3).forEach(c => { if (c != null) e.append(c); });
+  return e;
+}
+const app = $('#app');
+if (!D) {
+  app.append(h('div', { class: 'card empty' }, 'Aucune donnée. Lance d’abord : python analyse_instagram.py "chemin du dossier d’export"'));
+  return;
+}
+
+/* ---------- Données ---------- */
+const P = D.personnes;
+const byId = new Map(P.map(p => [p.id, p]));
+const W = D.poids;
+const ORDER = ['mutuel', 'suivi', 'abonne', 'inconnu', 'aucun'];
+const SEUIL_AUCUN = 5;
+const LIENS = {
+  mutuel:  { label: 'Vous vous suivez',                   color: 'var(--s1)' },
+  suivi:   { label: 'Tu suis ce compte',                  color: 'var(--s2)' },
+  abonne:  { label: 'Ce compte te suit',                  color: 'var(--s3)' },
+  inconnu: { label: 'Conversation, pseudo non retrouvé',  color: 'var(--neutral)' },
+  aucun:   { label: 'Aucun abonnement (score ≥ ' + SEUIL_AUCUN + ')', color: 'var(--neutral)', hollow: true },
+};
+const nf = n => (Math.round(n * 10) / 10).toLocaleString('fr-FR');
+const nom = p => p.pseudo ? '@' + p.pseudo : (p.nom || 'Compte inconnu');
+const fdate = ts => new Date(ts * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+const sdate = ts => ts ? new Date(ts * 1000).toLocaleDateString('fr-FR') : '';
+const mkey = ts => { const d = new Date(ts * 1000); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0'); };
+const mlabel = k => { const [y, m] = k.split('-'); return new Date(+y, +m - 1, 1).toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }); };
+function moisEntre(a, b) {
+  const out = []; let [y, m] = a.split('-').map(Number); const [y2, m2] = b.split('-').map(Number);
+  while (y < y2 || (y === y2 && m <= m2)) { out.push(y + '-' + String(m).padStart(2, '0')); if (++m > 12) { m = 1; y++; } }
+  return out;
+}
+function duree(ts) {
+  const m = Math.floor((Date.now() / 1000 - ts) / (30.44 * 86400));
+  if (m < 1) return 'moins d’un mois';
+  const a = Math.floor(m / 12), r = m % 12;
+  return [a ? a + (a > 1 ? ' ans' : ' an') : '', r ? r + ' mois' : ''].filter(Boolean).join(' et ');
+}
+const autres = p => p.reactions * W.reactions + p.commentaires * W.commentaires + p.stories_vues * W.stories_vues;
+const SERIES = [
+  { k: 'Messages que tu as envoyés', c: 'var(--s1)', pts: p => p.msg_envoyes * W.msg_envoyes },
+  { k: 'Messages que tu as reçus',   c: 'var(--s2)', pts: p => p.msg_recus * W.msg_recus },
+  { k: 'Tes likes de posts',         c: 'var(--s3)', pts: p => p.likes_posts * W.likes_posts },
+  { k: 'Tes likes de stories',       c: 'var(--s4)', pts: p => p.likes_stories * W.likes_stories },
+  { k: 'Autres (réactions, commentaires, stories vues)', c: 'var(--s5)', pts: autres },
+  { k: 'Vues de tes stories par ce compte', c: 'var(--s6)', pts: p => p.a_vu_stories * W.a_vu_stories + p.revisionnages * W.revisionnages },
+];
+const STORIES = D.stories || [];
+const moisActifs = [...new Set(P.flatMap(p => Object.keys(p.mois)))].sort();
+const MOIS = moisActifs.length ? moisEntre(moisActifs[0], moisActifs[moisActifs.length - 1]) : [];
+const maxScore = Math.max(1, ...P.map(p => p.score));
+
+const state = { on: Object.fromEntries(ORDER.map(k => [k, true])), min: 0, q: '', sel: null, tab: 'reseau', sort: { k: 'Score', d: -1 } };
+const match = p => !state.q || (p.pseudo || '').includes(state.q) || (p.nom || '').toLowerCase().includes(state.q);
+const visible = () => P.filter(p => state.on[p.lien] && p.score >= (p.lien === 'aucun' ? Math.max(SEUIL_AUCUN, state.min) : state.min));
+
+/* ---------- Infobulle ---------- */
+const tip = $('#tip');
+function showTip(ev, ...content) {
+  tip.replaceChildren(...content.flat(3).filter(c => c != null));
+  tip.style.display = 'block';
+  const r = tip.getBoundingClientRect();
+  let x = ev.clientX + 14, y = ev.clientY + 14;
+  if (x + r.width > innerWidth - 8) x = ev.clientX - r.width - 14;
+  if (y + r.height > innerHeight - 8) y = ev.clientY - r.height - 14;
+  tip.style.left = Math.max(8, x) + 'px'; tip.style.top = Math.max(8, y) + 'px';
+}
+const hideTip = () => { tip.style.display = 'none'; };
+
+/* ---------- En-tête ---------- */
+const nbSuivis = P.filter(p => p.suivi_depuis).length, nbAbonnes = P.filter(p => p.abonne_depuis).length;
+const nbMutuels = P.filter(p => p.lien === 'mutuel').length;
+const nbMsg = P.reduce((a, p) => a + p.msg_envoyes + p.msg_recus, 0);
+const nbConv = P.filter(p => p.msg_envoyes + p.msg_recus > 0).length;
+const kpi = (v, l) => h('div', { class: 'card kpi' }, h('div', { class: 'v' }, typeof v === 'number' ? nf(v) : v), h('div', { class: 'l' }, l));
+app.append(
+  h('h1', null, 'Réseau Instagram de @' + D.moi.pseudo),
+  h('p', { class: 'sub' }, 'Généré le ' + D.genere_le + ' à partir de ton export. Tout reste sur ton ordinateur.'),
+  h('div', { class: 'kpis' },
+    kpi(nbSuivis, 'comptes que tu suis'), kpi(nbAbonnes, 'abonnés présents dans l’export'),
+    kpi(nbMutuels, 'abonnements réciproques'), kpi(nbMsg, 'messages privés échangés'), kpi(nbConv, 'personnes avec qui tu discutes'))
+);
+const premiersSuivis = Math.min(...P.filter(p => p.suivi_depuis).map(p => p.suivi_depuis));
+if (MOIS.length && isFinite(premiersSuivis) && mkey(premiersSuivis) < MOIS[0]) {
+  app.append(h('div', { class: 'notice' },
+    'Cet export ne contient l’activité (messages, likes, stories, nouveaux abonnés) que de ' + mlabel(MOIS[0]) + ' à ' + mlabel(MOIS[MOIS.length - 1]) +
+    ', alors que tes abonnements remontent à ' + mlabel(mkey(premiersSuivis)) + '. Les abonnés plus anciens n’y figurent pas, donc certains comptes marqués « Tu suis ce compte » te suivent peut-être aussi. ' +
+    'Pour tout avoir, redemande un export avec la période « Depuis le début ».'));
+}
+
+/* ---------- Onglets ---------- */
+const TABS = [['reseau', 'Réseau'], ['idees', 'Suggestions'], ['abonnes', 'Abonnés'], ['conv', 'Conversations'], ['top', 'Top 20'], ['stories', 'Stories'], ['chrono', 'Chronologie'], ['table', 'Tableau'], ['sait', 'Tes données'], ['pro', 'Insights pro']];
+const tabsEl = h('div', { class: 'tabs', role: 'tablist' });
+const panels = {};
+TABS.forEach(([id, label]) => {
+  tabsEl.append(h('button', { role: 'tab', 'data-tab': id, onclick: () => setTab(id) }, label));
+  panels[id] = h('section', { class: 'panel', id: 'p-' + id });
+});
+function setTab(id) {
+  state.tab = id;
+  tabsEl.querySelectorAll('button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === id));
+  for (const k in panels) panels[k].hidden = k !== id;
+  filters.style.display = id === 'reseau' || id === 'table' ? '' : 'none';
+  hideTip();
+}
+
+/* ---------- Filtres (communs au réseau et au tableau) ---------- */
+const filters = h('div', { class: 'filters' });
+ORDER.forEach(k => {
+  const n = P.filter(p => p.lien === k && (k !== 'aucun' || p.score >= SEUIL_AUCUN)).length;
+  if (!n) return;
+  filters.append(h('button', { class: 'chip', 'aria-pressed': 'true', onclick: e => {
+    state.on[k] = !state.on[k]; e.currentTarget.setAttribute('aria-pressed', state.on[k]); refresh();
+  } }, h('span', { class: 'sw' + (LIENS[k].hollow ? ' hollow' : ''), style: LIENS[k].hollow ? '' : 'background:' + LIENS[k].color }), LIENS[k].label, h('span', { class: 'n' }, n)));
+});
+const minOut = h('span', null, '0');
+filters.append(
+  h('label', { class: 'rng' }, 'Score minimum',
+    h('input', { type: 'range', min: 0, max: 50, step: 1, value: 0, oninput: e => { state.min = +e.target.value; minOut.textContent = e.target.value; refresh(); } }), minOut),
+  h('input', { type: 'search', placeholder: 'Chercher un pseudo ou un nom', 'aria-label': 'Chercher un compte', oninput: e => { state.q = e.target.value.trim().toLowerCase().replace(/^@/, ''); refresh(); } })
+);
+app.append(tabsEl, filters, ...Object.values(panels));
+setTab('reseau');
+
+/* ---------- Réseau ---------- */
+const VB = { w: 1080, h: 960 };
+const view = { cx: 0, cy: 0, k: 1 };
+const svg = s('svg', { id: 'graph', role: 'img', 'aria-label': 'Graphique du réseau : toi au centre, chaque compte placé selon son score de proximité' });
+const countEl = h('div', { class: 'count' });
+const detail = h('aside', { class: 'card detail' });
+const applyView = () => svg.setAttribute('viewBox', [view.cx - VB.w / 2 / view.k, view.cy - VB.h / 2 / view.k, VB.w / view.k, VB.h / view.k].join(' '));
+const zoomBy = f => { view.k = Math.min(8, Math.max(1, view.k * f)); if (view.k === 1) { view.cx = view.cy = 0; } applyView(); };
+// Curseur temporel : un cran par mois, le dernier cran = aujourd'hui
+const datesLiens = P.flatMap(p => [p.suivi_depuis, p.abonne_depuis]).filter(Boolean);
+const bornes = [...datesLiens.map(mkey), ...MOIS].sort();
+const T_MOIS = bornes.length ? moisEntre(bornes[0], bornes[bornes.length - 1]) : [];
+const tOut = h('span', { class: 'tout' }, 'Aujourd’hui');
+const tRange = h('input', { type: 'range', min: 0, max: T_MOIS.length, value: T_MOIS.length, 'aria-label': 'Date affichée sur le graphique' });
+let lecture = null;
+function setT(v) {
+  state.t = v >= T_MOIS.length ? null : v;
+  tRange.value = v;
+  tOut.textContent = state.t == null ? 'Aujourd’hui' : 'Fin ' + mlabel(T_MOIS[v]);
+  drawGraph();
+}
+function stopLecture() { clearInterval(lecture); lecture = null; tPlay.textContent = '▶ Lecture'; }
+const tPlay = h('button', { class: 'w', onclick: () => {
+  if (lecture) return stopLecture();
+  if (+tRange.value >= T_MOIS.length) setT(0);
+  tPlay.textContent = '⏸ Pause';
+  lecture = setInterval(() => { const v = +tRange.value + 1; setT(v); if (v >= T_MOIS.length) stopLecture(); }, 450);
+} }, '▶ Lecture');
+tRange.addEventListener('input', e => { if (lecture) stopLecture(); setT(+e.target.value); });
+panels.reseau.append(h('div', { class: 'graphwrap' },
+  h('div', { class: 'card stage' }, svg, countEl,
+    h('div', { class: 'zoom' },
+      h('button', { 'aria-label': 'Zoomer', onclick: () => zoomBy(1.5) }, '+'),
+      h('button', { 'aria-label': 'Dézoomer', onclick: () => zoomBy(1 / 1.5) }, '−'),
+      h('button', { class: 'w', onclick: () => { view.k = 1; view.cx = view.cy = 0; applyView(); } }, 'Recentrer')),
+    T_MOIS.length > 1 ? h('div', { class: 'timebar' }, tPlay, h('span', { class: 'm' }, mlabel(T_MOIS[0])), tRange, tOut) : null),
+  detail),
+  h('details', { class: 'how card' }, h('summary', null, 'Comment lire ce graphique'),
+    h('ul', null,
+      h('li', null, 'Tu es au centre. Plus un compte est proche du centre et gros, plus son score est élevé.'),
+      h('li', null, 'Score = messages envoyés et reçus (' + W.msg_envoyes + ' pt chacun) + tes likes de posts (' + W.likes_posts + ' pt) + tes likes de stories (' + W.likes_stories + ' pts) + tes réactions et commentaires (' + W.reactions + ' pts) + stories que tu as vues (' + W.stories_vues + ' pt) + tes stories vues par ce compte (' + W.a_vu_stories + ' pt, et ' + W.revisionnages + ' pts par revisionnage).'),
+      h('li', null, 'Seuls les messages, et les vues de tes stories si tu remplis stories_plus.csv, montrent ce que l’autre personne fait vers toi. Instagram n’exporte pas les likes ni les vues que tu reçois : le reste du score mesure donc ton activité envers le compte.'),
+      h('li', null, 'La couleur indique qui suit qui. Dans chaque couleur, les comptes sont rangés du plus ancien au plus récent, dans le sens des aiguilles d’une montre.'),
+      h('li', null, 'Le curseur sous le graphique remonte le temps mois par mois : chaque compte apparaît quand tu commences à le suivre ou à échanger avec lui, puis se rapproche du centre au fil de vos échanges. Les échanges ne sont connus que sur la période couverte par l’export.'),
+      h('li', null, 'Un contour noir épais signale un ami proche. Les pointillés relient des personnes qui partagent une discussion de groupe avec toi.'),
+      h('li', null, 'Les liens entre les autres personnes (qui suit qui, qui like qui) ne figurent pas dans un export Instagram.'))));
+applyView();
+
+let drag = null, dragged = false;
+svg.addEventListener('pointerdown', e => { drag = { x: e.clientX, y: e.clientY, cx: view.cx, cy: view.cy }; dragged = false; });
+addEventListener('pointermove', e => {
+  if (!drag) return;
+  const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+  if (Math.abs(dx) + Math.abs(dy) > 4 && !dragged) { dragged = true; svg.classList.add('drag'); hideTip(); }
+  if (!dragged) return;
+  const f = VB.w / view.k / svg.clientWidth;
+  view.cx = drag.cx - dx * f; view.cy = drag.cy - dy * f; applyView();
+});
+addEventListener('pointerup', () => { drag = null; svg.classList.remove('drag'); });
+
+function tipPersonne(p, e) {
+  return [h('b', null, nom(p)), p.pseudo && p.nom ? h('div', { class: 'm' }, p.nom) : null,
+    h('div', null, LIENS[e.lien].label.replace(/ \(.*/, '')),
+    h('div', { class: 'm' }, state.t == null ? 'Score ' + nf(p.score) + ' · ' + nf(p.msg_envoyes + p.msg_recus) + ' messages' : 'Score ' + nf(e.score) + ' fin ' + mlabel(T_MOIS[state.t]))];
+}
+// État d'un compte à la date choisie avec le curseur (ou aujourd'hui si le curseur est au bout)
+function etat(p) {
+  if (state.t == null) return { score: p.score, lien: p.lien, la: true };
+  const k = T_MOIS[state.t], [y, m] = k.split('-').map(Number), lim = new Date(y, m, 1).getTime() / 1000;
+  let sc = 0;
+  for (const mk in p.pts_mois) if (mk <= k) sc += p.pts_mois[mk];
+  const suit = p.suivi_depuis && p.suivi_depuis < lim, abo = p.abonne_depuis && p.abonne_depuis < lim;
+  return { score: Math.round(sc * 10) / 10, lien: suit && abo ? 'mutuel' : suit ? 'suivi' : abo ? 'abonne' : p.pseudo ? 'aucun' : 'inconnu', la: !!(suit || abo || sc > 0) };
+}
+function drawGraph() {
+  svg.replaceChildren();
+  const nodes = visible().sort((a, b) => ORDER.indexOf(a.lien) - ORDER.indexOf(b.lien) ||
+    (a.suivi_depuis || a.abonne_depuis || a.premiere || 0) - (b.suivi_depuis || b.abonne_depuis || b.premiere || 0));
+  const N0 = nodes.length;
+  const RMIN = 78, RMAX = 420, L = Math.log1p(maxScore);
+  const rad = sc => RMAX - (RMAX - RMIN) * Math.log1p(sc) / L;
+  const size = sc => (n > 600 ? 2.5 : 3.5) + 13 * Math.sqrt(sc / maxScore);
+  // Repères de score
+  [0, 1, 10, 100, 1000].filter(v => v < maxScore).forEach(v => {
+    svg.append(s('circle', { class: 'guide', r: rad(v) }), s('text', { class: 'guidetxt', x: 0, y: -rad(v) - 3, 'text-anchor': 'middle' }, v === 0 ? 'score 0' : v + ' pts'));
+  });
+  // Angles : un secteur par type de lien, ordre chronologique à l'intérieur
+  const GAP = Math.max(2, Math.round(N0 / 60));
+  let slot = 0, prev = null;
+  const tous = nodes.map(p => {
+    if (prev && prev !== p.lien) slot += GAP; prev = p.lien;
+    return { p, slot: slot++ };
+  });
+  const total = slot + GAP;
+  // Chaque compte garde sa place sur le cercle ; le curseur ne fait qu'afficher ceux qui existaient déjà
+  const pts = tous.filter(o => (o.e = etat(o.p)).la), n = pts.length;
+  countEl.textContent = state.t == null ? n + ' comptes affichés sur ' + P.length : n + ' comptes fin ' + mlabel(T_MOIS[state.t]);
+  pts.forEach(o => {
+    o.a = -Math.PI / 2 + 2 * Math.PI * (o.slot + GAP / 2) / total; o.R = rad(o.e.score); o.r = size(o.e.score);
+    o.tol = o.e.score === 0 ? 16 : 6; o.x = o.R * Math.cos(o.a); o.y = o.R * Math.sin(o.a);
+  });
+  // Écarte les points qui se chevauchent en gardant leur distance au centre
+  const iters = Math.max(8, Math.min(160, Math.round(2.5e7 / (n * n / 2 + 1))));
+  for (let it = 0; it < iters; it++) {
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+      const A = pts[i], B = pts[j]; let dx = B.x - A.x, dy = B.y - A.y; const min = A.r + B.r + 1.5;
+      if (Math.abs(dx) > min || Math.abs(dy) > min) continue;
+      let d = Math.hypot(dx, dy);
+      if (d >= min) continue;
+      if (d < 0.01) { dx = Math.cos(i * 2.4); dy = Math.sin(i * 2.4); d = 1; }
+      const push = (min - d) / 2; dx /= d; dy /= d;
+      A.x -= dx * push; A.y -= dy * push; B.x += dx * push; B.y += dy * push;
+    }
+    pts.forEach(o => {
+      const cur = Math.hypot(o.x, o.y) || 1, tgt = Math.min(o.R + o.tol, Math.max(o.R - o.tol, cur));
+      o.x *= tgt / cur; o.y *= tgt / cur;
+    });
+  }
+  const pos = new Map(pts.map(o => [o.p.id, o]));
+  // Liens vers le centre
+  const gE = s('g');
+  pts.forEach(o => { if (o.e.score > 0) gE.append(s('line', { class: 'edge', x1: 0, y1: 0, x2: o.x, y2: o.y, 'stroke-width': 0.4 + 2.6 * Math.log1p(o.e.score) / L, opacity: match(o.p) ? 0.28 : 0.05 })); });
+  svg.append(gE);
+  // Discussions de groupe
+  (D.groupes || []).forEach(g => {
+    const m = g.membres.map(id => pos.get(id)).filter(Boolean);
+    for (let i = 0; i < m.length; i++) for (let j = i + 1; j < m.length; j++) {
+      const a = m[i], b = m[j];
+      svg.append(s('path', { class: 'glink', d: 'M' + a.x + ' ' + a.y + ' Q' + (a.x + b.x) * 0.3 + ' ' + (a.y + b.y) * 0.3 + ' ' + b.x + ' ' + b.y }));
+    }
+  });
+  // Points
+  const gN = s('g');
+  pts.slice().sort((a, b) => a.e.score - b.e.score).forEach(o => {
+    const p = o.p, L_ = LIENS[o.e.lien];
+    const g = s('g', { class: 'node' + (L_.hollow ? ' hollow' : '') + (p.ami_proche ? ' close' : '') + (state.sel === p.id ? ' sel' : '') + (match(p) ? '' : ' dim'), transform: 'translate(' + o.x.toFixed(1) + ',' + o.y.toFixed(1) + ')', tabindex: 0, role: 'button', 'aria-label': nom(p) + ', score ' + nf(o.e.score) },
+      s('circle', { r: o.r + 5, fill: 'transparent' }),
+      s('circle', { class: 'halo', r: o.r + 4, fill: 'none' }),
+      s('circle', { class: 'dot', r: o.r, fill: L_.color }));
+    g.addEventListener('pointermove', e => { if (!dragged) showTip(e, tipPersonne(p, o.e)); });
+    g.addEventListener('pointerleave', hideTip);
+    g.addEventListener('click', () => { if (!dragged) select(p.id); });
+    g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(p.id); } });
+    gN.append(g);
+  });
+  svg.append(gN);
+  // Toi
+  svg.append(s('circle', { r: 24, fill: 'var(--ink)' }), s('text', { x: 0, y: 4, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': 600, fill: 'var(--surface)' }, 'Toi'));
+  // Étiquettes : les plus gros scores d'abord, sans chevauchement
+  const boxes = [{ x0: -28, y0: -28, x1: 28, y1: 28 }];
+  pts.forEach(o => { if (o.r >= 6) boxes.push({ x0: o.x - o.r, y0: o.y - o.r, x1: o.x + o.r, y1: o.y + o.r }); });   // pas d'étiquette sur un gros point
+  const cand = pts.filter(o => match(o.p)).sort((a, b) => b.e.score - a.e.score).slice(0, state.q ? 60 : 32);
+  cand.forEach(o => {
+    if (!state.q && o.e.score <= 0 && o.p.id !== state.sel) return;
+    const t = nom(o.p), w = t.length * 6.1 + 4, right = o.x >= 0;
+    const x0 = right ? o.x + o.r + 4 : o.x - o.r - 4 - w, b = { x0, y0: o.y - 7, x1: x0 + w, y1: o.y + 7 };
+    if (boxes.some(c => b.x0 < c.x1 && b.x1 > c.x0 && b.y0 < c.y1 && b.y1 > c.y0)) return;
+    boxes.push(b);
+    svg.append(s('text', { class: 'lbl', x: right ? o.x + o.r + 4 : o.x - o.r - 4, y: o.y + 4, 'text-anchor': right ? 'start' : 'end' }, t));
+  });
+  if (!n) svg.append(s('text', { x: 0, y: 60, 'text-anchor': 'middle', fill: 'var(--muted)' }, 'Aucun compte ne correspond aux filtres.'));
+}
+
+function select(id) {
+  state.sel = id;
+  svg.querySelectorAll('.node.sel').forEach(e => e.classList.remove('sel'));
+  drawDetail(); drawGraph();
+}
+function drawDetail() {
+  const p = state.sel && byId.get(state.sel);
+  if (!p) {
+    detail.replaceChildren(h('h2', null, 'Détail d’un compte'), h('p', { class: 'nm' }, 'Clique sur un point du graphique, ou sur une ligne du tableau, pour voir depuis quand vous vous suivez et le détail de vos échanges.'));
+    return;
+  }
+  const L_ = LIENS[p.lien];
+  const row = (k, v) => h('tr', null, h('td', null, k), h('td', null, v));
+  const mx = Math.max(1, ...MOIS.map(m => p.mois[m] || 0)), bw = 260 / Math.max(1, MOIS.length);
+  detail.replaceChildren(...[
+    h('h2', null, p.pseudo ? h('a', { href: 'https://www.instagram.com/' + encodeURIComponent(p.pseudo) + '/', target: '_blank', rel: 'noopener noreferrer' }, '@' + p.pseudo) : nom(p)),
+    p.pseudo && p.nom ? h('p', { class: 'nm' }, p.nom) : null,
+    h('div', { class: 'badges' },
+      h('span', { class: 'badge' }, h('span', { class: 'sw' + (L_.hollow ? ' hollow' : ''), style: L_.hollow ? '' : 'background:' + L_.color }), L_.label.replace(/ \(.*/, '')),
+      p.ami_proche ? h('span', { class: 'badge' }, '★ Ami proche') : null,
+      p.desabonne ? h('span', { class: 'badge' }, 'Désabonné récemment') : null,
+      p.demande_en_attente ? h('span', { class: 'badge' }, 'Demande en attente') : null),
+    p.suivi_depuis ? h('p', null, 'Tu suis ce compte depuis le ', h('b', null, fdate(p.suivi_depuis)), ' (' + duree(p.suivi_depuis) + ').') : null,
+    p.abonne_depuis ? h('p', null, 'Ce compte te suit depuis le ', h('b', null, fdate(p.abonne_depuis)), ' (' + duree(p.abonne_depuis) + ').') : null,
+    !p.suivi_depuis && !p.abonne_depuis ? h('p', { class: 'nm' }, p.pseudo ? 'Aucun abonnement entre vous dans cet export.' : 'Pseudo non retrouvé : complète alias.csv puis relance le script pour relier cette conversation à un compte.') : null,
+    h('table', null, h('tbody', null,
+      row('Score de proximité', nf(p.score)),
+      row('Messages que tu as envoyés', nf(p.msg_envoyes)),
+      row('Messages que tu as reçus', nf(p.msg_recus)),
+      p.premier_msg ? row('Premier message', sdate(p.premier_msg)) : null,
+      p.dernier_msg ? row('Dernier message', sdate(p.dernier_msg)) : null,
+      dm(p) ? row('Conversations lancées (toi / ce compte)', p.init_moi + ' / ' + p.init_autre) : null,
+      p.rep_moi != null ? row('Tu réponds en (médiane)', fduree(p.rep_moi)) : null,
+      p.rep_autre != null ? row('Ce compte répond en (médiane)', fduree(p.rep_autre)) : null,
+      row('Tes likes de posts', nf(p.likes_posts)),
+      row('Tes likes de stories', nf(p.likes_stories)),
+      row('Tes réactions', nf(p.reactions)),
+      row('Tes commentaires', nf(p.commentaires)),
+      row('Stories que tu as vues', nf(p.stories_vues)),
+      STORIES.length ? row('A vu tes stories', p.a_vu_stories + ' sur ' + STORIES.length) : null,
+      STORIES.length ? row('Revisionnages de tes stories', nf(p.revisionnages)) : null)),
+    MOIS.length > 1 ? h('div', { class: 'cap' }, 'Interactions par mois, de ' + mlabel(MOIS[0]) + ' à ' + mlabel(MOIS[MOIS.length - 1])) : null,
+    MOIS.length > 1 ? s('svg', { viewBox: '0 0 260 56', width: '100%', role: 'img', 'aria-label': 'Interactions par mois' },
+      s('line', { x1: 0, x2: 260, y1: 54.5, y2: 54.5, stroke: 'var(--axis)' }),
+      MOIS.map((m, i) => {
+        const v = p.mois[m] || 0, hh = v ? Math.max(2, 50 * v / mx) : 0;
+        return s('g', null, s('rect', { x: i * bw + 1, y: 54 - hh, width: Math.max(1, bw - 2), height: hh, rx: Math.min(2, hh / 2), fill: 'var(--s1)' }),
+          s('rect', { x: i * bw, y: 0, width: bw, height: 56, fill: 'transparent' }, s('title', null, mlabel(m) + ' : ' + nf(v))));
+      })) : null
+  ].filter(Boolean));
+}
+
+/* ---------- Top 20 ---------- */
+function drawTop() {
+  const top = P.filter(p => p.score > 0).slice(0, 20), mx = Math.max(1, ...top.map(p => p.score));
+  const grid = h('div', { class: 'bars' });
+  top.forEach(p => {
+    const track = h('div', { class: 'track' });
+    SERIES.forEach(S => { const v = S.pts(p); if (v > 0) track.append(h('div', { class: 'seg', style: 'width:' + (100 * v / mx) + '%;background:' + S.c })); });
+    track.addEventListener('pointermove', e => showTip(e, h('b', null, nom(p)),
+      SERIES.map(S => S.pts(p) > 0 ? h('div', null, h('span', { class: 'sw sq', style: 'background:' + S.c + ';margin-right:6px' }), S.k + ' : ' + nf(S.pts(p)) + ' pts') : null),
+      h('div', { class: 'm' }, nf(p.msg_envoyes) + ' envoyés · ' + nf(p.msg_recus) + ' reçus · ' + nf(p.likes_posts + p.likes_stories) + ' likes')));
+    track.addEventListener('pointerleave', hideTip);
+    grid.append(h('div', { class: 'who' }, h('button', { title: 'Voir dans le réseau', onclick: () => { setTab('reseau'); select(p.id); } }, nom(p))), track, h('div', { class: 'val' }, nf(p.score)));
+  });
+  panels.top.replaceChildren(h('div', { class: 'card' },
+    h('h2', null, 'Les 20 comptes avec lesquels tu échanges le plus'),
+    h('p', { class: 'sub' }, 'Score de proximité, en points, découpé par type d’interaction.'),
+    h('div', { class: 'legend' }, SERIES.map(S => h('span', null, h('span', { class: 'sw sq', style: 'background:' + S.c }), S.k))),
+    top.length ? grid : h('div', { class: 'empty' }, 'Aucune interaction dans cet export.')));
+}
+
+/* ---------- Suggestions ---------- */
+const FIN = D.fin || Date.now() / 1000, JOUR = 86400;
+const dm = p => p.msg_envoyes + p.msg_recus;
+const ilya = ts => { const j = Math.round((FIN - ts) / JOUR); return j < 1 ? 'le jour de l’export' : j < 31 ? 'il y a ' + j + ' j' : 'il y a ' + Math.round(j / 30.44) + ' mois'; };
+const SUPPRIME = /^(utilisateur instagram|instagram user|compte supprimé)?$/i;
+function ideesEcrire() {
+  const N = STORIES.length, out = [];
+  P.forEach(p => {
+    if (!p.pseudo && SUPPRIME.test(p.nom || '')) return;
+    if (p.lien === 'aucun' && !dm(p)) return;
+    const frais = p.dernier_msg && FIN - p.dernier_msg <= 30 * JOUR;
+    let r = null;
+    if (p.attend_reponse && frais) r = [1, 'Dernier message de sa part, sans réponse de toi', 'Réponds, même brièvement : la conversation est encore chaude.'];
+    else if (p.abonne_depuis && FIN - p.abonne_depuis <= 30 * JOUR && !dm(p)) r = [2, 'Nouvel abonné, aucun message', 'Un mot de bienvenue ou une réaction à sa story suffit.'];
+    else if (!dm(p) && (p.revisionnages > 0 || (N >= 2 && p.a_vu_stories >= Math.max(2, 0.6 * N)))) r = [3, 'Regarde tes stories de près, aucun message', 'Pose-lui une question en story ou écris-lui directement.'];
+    else if (p.likes_stories >= 3 && !dm(p)) r = [4, 'Tu likes souvent ses stories, aucun message', 'Réponds à sa prochaine story au lieu de seulement la liker.'];
+    else if (p.attend_reponse) r = [5, 'Son dernier message est resté sans réponse', 'Relance en reprenant le dernier sujet.'];
+    else if (dm(p) >= 10 && FIN - p.dernier_msg > 60 * JOUR) r = [6, 'Conversation active, puis silencieuse', 'Envoie un reel ou une story qui te fait penser à vous deux.'];
+    else if (p.lien === 'mutuel' && !dm(p)) r = [7, 'Vous vous suivez, aucun message', 'Réagis à une de ses stories pour ouvrir la discussion.'];
+    if (r) out.push({ p, pr: r[0], why: r[1], idee: r[2], quand: p.dernier_msg || (r[0] === 2 ? p.abonne_depuis : null) });
+  });
+  const recent = x => x.pr === 1 || x.pr === 2 || x.pr === 5;
+  return out.sort((a, b) => a.pr - b.pr || (recent(a) ? (b.quand || 0) - (a.quand || 0) : b.p.score - a.p.score));
+}
+function ideesSuivre() {
+  const fb = D.followback, base = fb && fb.tous[1] >= 5 ? Math.round(100 * fb.tous[0] / fb.tous[1]) : null;
+  // Avec assez d'historique, on distingue les comptes avec qui tu échanges des autres
+  const tx = k => fb && fb[k][1] >= 10 ? Math.round(100 * fb[k][0] / fb[k][1]) : null;
+  const estContact = tx('avec_dm') != null ? 'Environ ' + tx('avec_dm') + ' % (' + fb.avec_dm[0] + ' sur ' + fb.avec_dm[1] + ' comptes avec qui tu échangeais des messages)' : 'Probable : vous êtes déjà en contact';
+  const estContenu = tx('sans_dm') != null ? 'Environ ' + tx('sans_dm') + ' % (' + fb.sans_dm[0] + ' sur ' + fb.sans_dm[1] + ' comptes sans message), moins pour un gros compte'
+    : base == null ? 'Non mesurable' : 'Environ ' + base + ' %, ta moyenne (moins pour un gros compte)';
+  const enGroupe = new Set((D.groupes || []).flatMap(g => g.membres)), out = [], contenu = [];
+  P.forEach(p => {
+    if (p.suivi_depuis || !p.pseudo) return;
+    if (p.lien === 'abonne') out.push({ p, pr: 1, why: 'Te suit déjà', est: 'Certain : réciproque dès que tu suis' });
+    else if (p.demande_en_attente) out.push({ p, pr: 2, why: 'Tu as déjà envoyé une demande', est: 'En attente de sa réponse' });
+    else if (dm(p) > 0) out.push({ p, pr: 3, why: 'Vous avez échangé ' + nf(dm(p)) + (dm(p) > 1 ? ' messages' : ' message'), est: estContact });
+    else if (enGroupe.has(p.id)) out.push({ p, pr: 4, why: 'Dans une discussion de groupe avec toi', est: estContact });
+    else if (p.likes_posts + p.likes_stories >= 2 || p.stories_vues >= 4) contenu.push({ p, pr: 5, why: 'Tu regardes ou likes souvent son contenu', est: estContenu });
+  });
+  contenu.sort((a, b) => b.p.score - a.p.score);
+  return out.sort((a, b) => a.pr - b.pr || b.p.score - a.p.score).concat(contenu.slice(0, 10));
+}
+function barresHeures() {
+  const H = D.heures || [], Wd = 1000, Hd = 200, m = { l: 40, r: 10, t: 10, b: 26 }, pw = Wd - m.l - m.r, ph = Hd - m.t - m.b;
+  const mx = Math.max(1, ...H), step = pas(mx), top = Math.ceil(mx / step) * step, slot = pw / 24;
+  const sv = s('svg', { viewBox: '0 0 ' + Wd + ' ' + Hd, role: 'img', 'aria-label': 'Messages reçus par heure de la journée' });
+  for (let v = 0; v <= top; v += step) {
+    const y = m.t + ph - ph * v / top;
+    sv.append(s('line', { x1: m.l, x2: Wd - m.r, y1: y, y2: y, stroke: v ? 'var(--grid)' : 'var(--axis)' }), s('text', { class: 'axis-t', x: m.l - 6, y: y + 4, 'text-anchor': 'end' }, v));
+  }
+  H.forEach((v, i) => {
+    const x0 = m.l + i * slot, hh = ph * v / top;
+    if (v) sv.append(s('rect', { class: 'bar', x: x0 + 2, y: m.t + ph - hh, width: slot - 4, height: hh, rx: Math.min(4, hh / 2) }));
+    if (i % 3 === 0) sv.append(s('text', { class: 'axis-t', x: x0 + slot / 2, y: Hd - 8, 'text-anchor': 'middle' }, i + ' h'));
+    const hit = s('rect', { class: 'hit', x: x0, y: m.t, width: slot, height: ph });
+    hit.addEventListener('pointermove', e => showTip(e, h('b', null, 'De ' + i + ' h à ' + (i + 1) + ' h'), h('div', null, nf(v) + ' messages reçus')));
+    hit.addEventListener('pointerleave', hideTip);
+    sv.append(hit);
+  });
+  return sv;
+}
+function drawIdees() {
+  const ecrire = ideesEcrire(), suivre = ideesSuivre(), fb = D.followback;
+  const qui = p => h('td', { class: 'who' }, h('button', { title: 'Voir dans le réseau', onclick: () => { setTab('reseau'); select(p.id); } }, nom(p)), p.pseudo && p.nom ? h('div', { class: 'm' }, p.nom) : null);
+  const liste = (cols, rows) => h('div', { class: 'listwrap' }, h('table', { class: 'list' }, h('thead', null, h('tr', null, cols.map(c => h('th', null, c)))), h('tbody', null, rows)));
+  const H = D.heures || [], J = D.jours || [], totalH = H.reduce((a, b) => a + b, 0);
+  const topH = H.map((v, i) => [v, i]).sort((a, b) => b[0] - a[0]).slice(0, 3).map(x => x[1]).sort((a, b) => a - b).map(i => i + ' h');
+  const NOMS_J = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+  const topJ = J.map((v, i) => [v, i]).sort((a, b) => b[0] - a[0]).slice(0, 2).map(x => NOMS_J[x[1]]);
+  // Bilan rédigé, recalculé à chaque lancement du script
+  const pt = (titre, texte) => h('li', null, h('b', null, titre + ' '), texte);
+  const mesure = fb && fb.tous[1] >= 5, taux = mesure ? Math.round(100 * fb.tous[0] / fb.tous[1]) : null;
+  const attente = P.filter(p => p.attend_reponse), attenteFraiche = attente.filter(p => p.dernier_msg && FIN - p.dernier_msg <= 30 * JOUR).length;
+  const muets = P.filter(p => p.lien === 'mutuel' && !dm(p)).length;
+  const bilan = [
+    D.moi.prive ? pt('Ton compte est privé.', 'C’est le premier frein à l’audience : seuls tes abonnés voient ton contenu, et Instagram ne le propose pas aux inconnus. Le passer en public est le changement le plus efficace, mais tout le monde verra alors ce que tu publies ; c’est à toi de décider.') : null,
+    mesure ? pt(taux < 25 ? 'Suivre des gens rapporte peu.' : taux < 50 ? 'Suivre des gens rapporte moyennement.' : 'Suivre des gens fonctionne bien.',
+      'Depuis ' + mlabel(mkey(fb.depuis)) + ', sur les ' + fb.tous[1] + ' comptes que tu as suivis en premier, ' + fb.tous[0] + ' t’ont suivi en retour, soit ' + taux + ' %.') : null,
+    fb && fb.suivis_en_retour_par_toi ? pt(fb.suivis_en_retour_par_toi > fb.tous[0] ? 'Tes abonnés viennent surtout à toi.' : 'Certains abonnés viennent à toi.',
+      'Sur la même période, ' + fb.suivis_en_retour_par_toi + (fb.suivis_en_retour_par_toi > 1 ? ' comptes t’ont suivi en premier, puis tu les as suivis.' : ' compte t’a suivi en premier, puis tu l’as suivi.')) : null,
+    attente.length ? pt('Tu as des conversations en attente.', 'Dans ' + attente.length + (attente.length > 1 ? ' conversations' : ' conversation') + ', le dernier message vient de l’autre ; ' + attenteFraiche + (attenteFraiche > 1 ? ' datent' : ' date') + ' de moins de 30 jours.') : null,
+    muets ? pt(muets + (muets > 1 ? ' abonnements réciproques n’ont aucun message' : ' abonnement réciproque n’a aucun message'), 'dans la période de l’export.') : null,
+    totalH ? pt('Tes contacts t’écrivent surtout vers ' + topH.join(', ') + ',', 'le ' + topJ.join(' et le ') + ' en tête. C’est un indice du bon moment pour publier, pas une mesure de l’audience de tes stories.') : null,
+  ].filter(Boolean);
+  const conclusion = (mesure && taux < 25 ? 'Avec ' + taux + ' % de retour, suivre des comptes en masse ne vaut pas le coup, et Instagram bride les comptes qui le font. ' : 'Instagram bride les comptes qui suivent en masse : mieux vaut cibler. ') +
+    (attente.length || totalH ? 'D’après tes chiffres, répondre aux conversations en attente et publier aux heures où tes contacts sont actifs sont les pistes les plus rentables.' : '');
+  const nb = k => suivre.filter(x => x.pr === k);
+  const deja = nb(1), demandes = nb(2).length, contacts = nb(3).length + nb(4).length, contenus = nb(5).length;
+  const detailSuivre = [
+    deja.length ? h('li', null, deja.length + (deja.length > 1 ? ' te suivent déjà (' : ' te suit déjà (') + deja.slice(0, 3).map(x => nom(x.p)).join(', ') + (deja.length > 3 ? '…' : '') + '), donc l’abonnement devient réciproque dès que tu suis ' + (deja.length > 1 ? 'ces comptes.' : 'ce compte.')) : null,
+    demandes ? h('li', null, demandes + (demandes > 1 ? ' ont une demande de ta part en attente.' : ' a une demande de ta part en attente.')) : null,
+    contacts ? h('li', null, contacts + (contacts > 1 ? ' sont déjà en contact avec toi (message ou discussion de groupe).' : ' est déjà en contact avec toi (message ou discussion de groupe).')) : null,
+    contenus ? h('li', null, contenus + (contenus > 1 ? ' sont des comptes dont tu regardes souvent le contenu' : ' est un compte dont tu regardes souvent le contenu') + ', avec peu de chances de retour.') : null,
+  ].filter(Boolean);
+  panels.idees.replaceChildren(...[
+    bilan.length ? h('div', { class: 'card section' }, h('h2', null, 'Ce que disent tes données'), h('ul', { class: 'bilan' }, bilan), h('p', { class: 'concl' }, conclusion)) : null,
+    h('div', { class: 'kpis' },
+      fb && fb.tous[1] ? kpi(Math.round(100 * fb.tous[0] / fb.tous[1]) + ' %', 'de follow-back quand tu suis en premier (' + fb.tous[0] + ' sur ' + fb.tous[1] + ' depuis ' + mlabel(mkey(fb.depuis)) + ')') : null,
+      fb ? kpi(fb.suivis_en_retour_par_toi, 'comptes t’ont suivi en premier, puis tu les as suivis') : null,
+      kpi(P.filter(p => p.attend_reponse).length, 'conversations où le dernier message vient de l’autre'),
+      kpi(P.filter(p => p.lien === 'mutuel' && !dm(p)).length, 'abonnements réciproques sans aucun message')),
+    h('div', { class: 'card section' }, h('h2', null, 'À qui écrire'),
+      h('p', { class: 'sub' }, ecrire.length ? nf(ecrire.length) + (ecrire.length > 1 ? ' pistes classées' : ' piste classée') + ' des plus faciles aux plus difficiles' + (ecrire.length > 30 ? ' (les 30 premières sont affichées)' : '') + ', chacune avec la raison et une idée pour lancer la conversation. « Aucun message » veut dire aucun message dans la période de l’export.' : 'Aucune piste trouvée dans cet export.'),
+      ecrire.length ? liste(['Compte', 'Pourquoi', 'Idée', 'Dernier échange'], ecrire.slice(0, 30).map(x => h('tr', null, qui(x.p), h('td', null, x.why), h('td', { class: 'm' }, x.idee), h('td', { class: 'm' }, x.quand ? ilya(x.quand) : '')))) : null),
+    h('div', { class: 'card section' }, h('h2', null, 'Qui suivre'),
+      h('p', { class: 'sub' }, nf(suivre.length) + (suivre.length > 1 ? ' comptes' : ' compte') + ' de ton export que tu ne suis pas encore.'),
+      detailSuivre.length ? h('ul', { class: 'bilan' }, detailSuivre) : null,
+      suivre.length ? liste(['Compte', 'Pourquoi', 'Follow-back attendu'], suivre.map(x => h('tr', null, qui(x.p), h('td', null, x.why), h('td', { class: 'm' }, x.est)))) : h('div', { class: 'empty' }, 'Aucun compte à suggérer.')),
+    totalH ? h('div', { class: 'card stories section' }, h('h2', null, 'Quand publier'),
+      h('p', { class: 'sub' }, 'Heure à laquelle tes contacts t’écrivent (' + nf(totalH) + ' messages reçus). Les créneaux les plus actifs sont ' + topH.join(', ') + ', surtout le ' + topJ.join(' et le ') + '. C’est un indice du moment où ils sont sur Instagram, pas une mesure de l’audience de tes stories.'),
+      barresHeures()) : null,
+    h('div', { class: 'card section' }, h('h2', null, 'Limites'), h('ul', { class: 'bilan' },
+      mesure ? h('li', null, 'Les pourcentages sont mesurés sur ton historique (' + taux + ' % en moyenne). Les mentions « certain » et « probable » sont des déductions.')
+             : h('li', null, 'L’export ne contient pas assez d’abonnements récents pour mesurer un taux de follow-back. Les mentions « certain » et « probable » sont des déductions.'),
+      h('li', null, 'Le script ne peut pas calculer une probabilité compte par compte : l’export ne contient rien sur les autres comptes (nombre d’abonnés, amis en commun).'),
+      h('li', null, 'L’export ne dit rien des comptes que tu n’as jamais croisés. Pour ceux-là, les suggestions d’Instagram, basées sur les amis en commun, restent la meilleure source.')))
+  ].filter(Boolean));
+}
+
+/* ---------- Abonnés : qui ne suit pas en retour, qui s'est désabonné ---------- */
+const TRONQUE = MOIS.length > 0 && isFinite(premiersSuivis) && mkey(premiersSuivis) < MOIS[0];
+const tdQui = p => h('td', { class: 'who' }, h('button', { title: 'Voir dans le réseau', onclick: () => { setTab('reseau'); select(p.id); } }, nom(p)), p.pseudo && p.nom ? h('div', { class: 'm' }, p.nom) : null);
+const tListe = (cols, rows) => h('div', { class: 'listwrap' }, h('table', { class: 'list' }, h('thead', null, h('tr', null, cols.map(c => h('th', null, c)))), h('tbody', null, rows)));
+const puces = (pseudos, vide) => pseudos.length ? h('div', { class: 'chips' }, pseudos.map(u => h('span', null, '@' + u))) : h('p', { class: 'sub' }, vide);
+function drawAbonnes() {
+  const fen = D.followback ? D.followback.depuis : null;
+  const sansRetour = P.filter(p => p.lien === 'suivi');
+  const mesurables = sansRetour.filter(p => !TRONQUE || fen == null || p.suivi_depuis >= fen).sort((a, b) => a.suivi_depuis - b.suivi_depuis);
+  const inconnus = sansRetour.length - mesurables.length;
+  const fans = P.filter(p => p.lien === 'abonne').sort((a, b) => b.abonne_depuis - a.abonne_depuis);
+  const arretes = P.filter(p => p.desabonne && p.pseudo).map(p => p.pseudo), demandes = P.filter(p => p.demande_en_attente && p.pseudo).map(p => p.pseudo);
+  const ch = D.changements, MAXL = 60;
+  const suivis = P.filter(p => p.suivi_depuis);
+  const inutiles = mesurables.filter(p => p.score === 0);
+  const eloignes = P.filter(p => p.lien !== 'aucun' && p.score > 0 && p.derniere && FIN - p.derniere > 182 * JOUR && (p.pseudo || !SUPPRIME.test(p.nom || ''))).sort((a, b) => b.score - a.score);
+  const parEtiquette = {};
+  P.forEach(p => { if (p.etiquette) (parEtiquette[p.etiquette.toLowerCase()] = parEtiquette[p.etiquette.toLowerCase()] || []).push(p.pseudo); });
+  const genres = { h: 0, f: 0, a: 0, vide: 0 };
+  suivis.forEach(p => { genres[p.genre || 'vide']++; });
+  // Liste de travail : les cases cochées sont gardées dans ce navigateur, rien n'est envoyé à Instagram
+  const CLE = 'reseau-instagram-traites';
+  let traites;
+  try { traites = new Set(JSON.parse(localStorage.getItem(CLE) || '[]')); } catch (e) { traites = new Set(); }
+  const zone = h('div');
+  let sansEchange = false;
+  function listeTravail() {
+    const L = mesurables.filter(p => !sansEchange || p.score === 0), coches = L.filter(p => traites.has(p.pseudo)).length;
+    const filtre = h('input', { type: 'checkbox' });
+    filtre.checked = sansEchange;
+    filtre.addEventListener('change', () => { sansEchange = filtre.checked; listeTravail(); });
+    zone.replaceChildren(
+      h('div', { class: 'filters' }, h('label', { class: 'rng' }, filtre, 'Seulement les comptes sans aucun échange (' + inutiles.length + ')'),
+        h('span', { style: 'color:var(--ink2);font-size:12.5px' }, coches + (coches > 1 ? ' cochés sur ' : ' coché sur ') + L.length)),
+      L.length ? tListe(['Fait', 'Compte', 'Action', 'Suivi le', 'Sans retour depuis', 'Ton score'], L.map(p => {
+        const cb = h('input', { type: 'checkbox', 'aria-label': 'Marquer ' + nom(p) + ' comme traité' });
+        cb.checked = traites.has(p.pseudo);
+        cb.addEventListener('change', () => {
+          if (cb.checked) traites.add(p.pseudo); else traites.delete(p.pseudo);
+          try { localStorage.setItem(CLE, JSON.stringify([...traites])); } catch (e) {}
+          listeTravail();
+        });
+        // Le bouton ouvre le profil (Instagram n'a pas de lien qui désabonne directement) et coche la ligne
+        const bouton = h('a', { class: 'btn', href: 'https://www.instagram.com/' + encodeURIComponent(p.pseudo) + '/', target: '_blank', rel: 'noopener noreferrer',
+          title: 'Ouvre le profil : touche « Abonné(e) » puis « Se désabonner »' }, 'Se désabonner ↗');
+        bouton.addEventListener('click', () => {
+          traites.add(p.pseudo);
+          try { localStorage.setItem(CLE, JSON.stringify([...traites])); } catch (e) {}
+          setTimeout(listeTravail, 0);
+        });
+        return h('tr', { class: cb.checked ? 'fait' : null }, h('td', null, cb), tdQui(p),
+          h('td', null, bouton),
+          h('td', { class: 'm' }, sdate(p.suivi_depuis)), h('td', null, duree(p.suivi_depuis)), h('td', { class: 'm' }, nf(p.score)));
+      })) : h('div', { class: 'empty' }, mesurables.length ? 'Aucun compte dans ce filtre.' : 'Tous les comptes que tu suis te suivent en retour.'));
+  }
+  listeTravail();
+  panels.abonnes.replaceChildren(...[
+    h('div', { class: 'kpis' },
+      kpi(mesurables.length, 'comptes que tu suis sans retour' + (TRONQUE ? ' (mesurable)' : '')),
+      kpi(fans.length, fans.length > 1 ? 'abonnés que tu ne suis pas' : 'abonné que tu ne suis pas'),
+      kpi(nbMutuels, 'abonnements réciproques'),
+      ch ? kpi(ch.abonnes_perdus.length, 'abonnés perdus depuis l’export du ' + sdate(new Date(ch.depuis).getTime() / 1000)) : null),
+    h('div', { class: 'card section' }, h('h2', null, 'Ne te suivent pas en retour'),
+      h('p', { class: 'sub' }, (TRONQUE && fen
+        ? 'Comptes que tu as suivis depuis ' + mlabel(mkey(fen)) + ' et qui ne te suivent pas. Pour les ' + inconnus + ' comptes suivis avant, cet export ne permet pas de savoir : il faut un export « Depuis le début ».'
+        : 'Comptes que tu suis et qui ne te suivent pas.') + ' Les plus anciens d’abord. Le bouton « Se désabonner » ouvre le profil du compte : touche « Abonné(e) », puis « Se désabonner ». La ligne se coche toute seule ; décoche-la si tu gardes le compte. Le nombre d’abonnés d’un compte ne figure pas dans l’export ; il s’affiche sur son profil. Procède par petites séries : Instagram bride les comptes qui se désabonnent en masse.'),
+      zone),
+    h('div', { class: 'card section' }, h('h2', null, 'Te suivent, mais tu ne les suis pas'),
+      fans.length ? tListe(['Compte', 'Te suit depuis le'], fans.map(p => h('tr', null, tdQui(p), h('td', { class: 'm' }, sdate(p.abonne_depuis) + ' (' + duree(p.abonne_depuis) + ')')))) : h('p', { class: 'sub' }, 'Aucun dans cet export.')),
+    h('div', { class: 'card section' }, h('h2', null, 'Depuis ton export précédent'),
+      ch ? [h('p', { class: 'sub' }, 'Comparaison avec l’export du ' + sdate(new Date(ch.depuis).getTime() / 1000) + '.'),
+            h('h3', null, 'Abonnés perdus (' + ch.abonnes_perdus.length + ')'), puces(ch.abonnes_perdus, 'Personne ne s’est désabonné.'),
+            h('h3', null, 'Nouveaux abonnés (' + ch.abonnes_gagnes.length + ')'), puces(ch.abonnes_gagnes, 'Aucun nouvel abonné.'),
+            h('h3', null, 'Comptes que tu ne suis plus (' + ch.plus_suivis.length + ')'), puces(ch.plus_suivis, 'Aucun.'),
+            h('h3', null, 'Comptes que tu suis en plus (' + ch.nouveaux_suivis.length + ')'), puces(ch.nouveaux_suivis, 'Aucun.')]
+         : h('p', null, 'C’est le premier export que le script voit. Il a enregistré la liste de tes abonnés dans historique.json : au prochain export, cette section montrera qui s’est désabonné, qui est arrivé, et qui tu as arrêté de suivre. Pour comparer tout de suite avec un export plus ancien, relance le script avec l’option --ancien suivie de son dossier.')),
+    h('div', { class: 'card section' }, h('h2', null, 'Tri de tes abonnements'),
+      h('p', { class: 'sub' }, 'Deux catégories sont calculées à partir de l’export. Les étiquettes et le genre viennent de toi : le script ne devine rien sur les gens.'),
+      h('h3', null, 'Sans échange ni retour (' + inutiles.length + ')'),
+      h('p', { class: 'sub' }, 'Comptes que tu suis, qui ne te suivent pas, et avec lesquels l’export ne contient aucune interaction.'),
+      puces(inutiles.slice(0, 80).map(p => p.pseudo), 'Aucun.'), inutiles.length > 80 ? h('p', { class: 'sub' }, '… et ' + (inutiles.length - 80) + ' autres.') : null,
+      h('h3', null, 'Éloignés (' + eloignes.length + ')'),
+      h('p', { class: 'sub' }, 'Comptes avec lesquels tu as échangé, mais plus rien depuis au moins 6 mois.'),
+      eloignes.length ? tListe(['Compte', 'Dernière interaction', 'Score'], eloignes.slice(0, 40).map(p => h('tr', null, tdQui(p), h('td', { class: 'm' }, sdate(p.derniere) + ' (' + ilya(p.derniere) + ')'), h('td', { class: 'm' }, nf(p.score))))) : h('p', { class: 'sub' }, 'Aucun.'),
+      h('h3', null, 'Tes étiquettes'),
+      Object.keys(parEtiquette).length
+        ? Object.keys(parEtiquette).sort((a, b) => a.localeCompare(b, 'fr')).map(k => [h('p', { class: 'sub', style: 'margin:8px 0 0' }, h('b', null, k), ' (' + parEtiquette[k].length + ')'), puces(parEtiquette[k], '')])
+        : h('p', { class: 'sub' }, 'Aucune pour l’instant. Ouvre etiquettes.csv, à côté de cette page : il liste tous tes comptes. Écris un mot dans la colonne « etiquette » (pote, famille, malaisant, à retirer…), puis relance le script.'),
+      h('h3', null, 'Répartition de tes abonnements par genre'),
+      genres.h + genres.f + genres.a
+        ? [h('p', null, genres.h + (genres.h > 1 ? ' hommes' : ' homme') + ', ' + genres.f + (genres.f > 1 ? ' femmes' : ' femme') + (genres.a ? ', ' + genres.a + (genres.a > 1 ? ' autres' : ' autre') : '') + ', ' + genres.vide + ' non renseignés, sur ' + suivis.length + ' comptes que tu suis.'),
+           h('div', { class: 'split', style: 'width:100%;max-width:420px;height:14px', role: 'img', 'aria-label': 'Répartition par genre' },
+             genres.h ? h('span', { title: 'Hommes', style: 'width:' + (100 * genres.h / suivis.length) + '%;background:var(--s1)' }) : null,
+             genres.f ? h('span', { title: 'Femmes', style: 'width:' + (100 * genres.f / suivis.length) + '%;background:var(--s2)' }) : null,
+             genres.a ? h('span', { title: 'Autres', style: 'width:' + (100 * genres.a / suivis.length) + '%;background:var(--s3)' }) : null,
+             genres.vide ? h('span', { title: 'Non renseignés', style: 'width:' + (100 * genres.vide / suivis.length) + '%;background:var(--grid)' }) : null),
+           h('div', { class: 'legend', style: 'margin-top:8px' }, [['Hommes', 'var(--s1)'], ['Femmes', 'var(--s2)'], ['Autres', 'var(--s3)'], ['Non renseignés', 'var(--grid)']].map(x => h('span', null, h('span', { class: 'sw sq', style: 'background:' + x[1] }), x[0])))]
+        : h('p', { class: 'sub' }, 'Non renseignée. Le script ne déduit pas le genre d’un nom ou d’un pseudo : c’est trop souvent faux. Si tu veux cette répartition, écris h, f ou a dans la colonne « genre » de etiquettes.csv.')),
+    arretes.length || demandes.length ? h('div', { class: 'card section' }, h('h2', null, 'Autres traces dans l’export'),
+      arretes.length ? [h('h3', null, 'Comptes que tu as arrêté de suivre récemment (' + arretes.length + ')'), puces(arretes, '')] : null,
+      demandes.length ? [h('h3', null, 'Demandes d’abonnement envoyées, encore sans réponse (' + demandes.length + ')'), puces(demandes, '')] : null) : null
+  ].filter(Boolean));
+}
+
+/* ---------- Conversations : qui lance, qui répond vite, ce qui monte ou s'éteint ---------- */
+const fduree = sec => sec == null ? '—' : sec < 90 ? Math.round(sec) + ' s' : sec < 5400 ? Math.round(sec / 60) + ' min' : sec < 129600 ? Math.round(sec / 3600) + ' h' : Math.round(sec / 86400) + ' j';
+function tendance(p) {
+  if (MOIS.length < 6) return '—';
+  const somme = ms => ms.reduce((a, m) => a + (p.msg_mois[m] || 0), 0), a = somme(MOIS.slice(-3)), b = somme(MOIS.slice(-6, -3));
+  return !a && !b ? 'Éteinte' : !b ? 'Nouvelle' : !a ? 'À l’arrêt' : a >= 1.5 * b ? '↗ En hausse' : a <= 0.5 * b ? '↘ En baisse' : '→ Stable';
+}
+function drawConv() {
+  const C = D.conversations || {}, totalInit = (C.init_moi || 0) + (C.init_autre || 0);
+  const rows = P.filter(p => dm(p) >= 10 && (p.pseudo || !SUPPRIME.test(p.nom || ''))).sort((a, b) => dm(b) - dm(a));
+  if (!totalInit) { panels.conv.replaceChildren(h('div', { class: 'card empty' }, 'Aucune conversation privée dans cet export.')); return; }
+  const lance = p => { const t = p.init_moi + p.init_autre || 1; return h('td', null, 'toi ' + p.init_moi + ' · ce compte ' + p.init_autre,
+    h('div', { class: 'split', role: 'img', 'aria-label': 'Toi ' + Math.round(100 * p.init_moi / t) + ' %' },
+      p.init_moi ? h('span', { style: 'width:' + (100 * p.init_moi / t) + '%;background:var(--s1)' }) : null,
+      p.init_autre ? h('span', { style: 'width:' + (100 * p.init_autre / t) + '%;background:var(--s2)' }) : null)); };
+  panels.conv.replaceChildren(
+    h('div', { class: 'kpis' },
+      kpi(Math.round(100 * C.init_moi / totalInit) + ' %', 'des conversations sont lancées par toi (' + C.init_moi + ' sur ' + totalInit + ')'),
+      kpi(fduree(C.rep_moi), 'ton temps de réponse médian'),
+      kpi(fduree(C.rep_autre), 'le temps de réponse médian des autres'),
+      kpi(rows.length, 'comptes avec au moins 10 messages')),
+    h('div', { class: 'card section' }, h('h2', null, 'Dynamique de tes conversations'),
+      h('p', { class: 'sub' }, 'Comptes avec au moins 10 messages. Une conversation commence après plus de ' + (C.pause_heures || 12) + ' h de silence, et envoyer un reel compte comme un message. Le temps de réponse est la médiane à l’intérieur d’une conversation. La tendance compare les 3 derniers mois de l’export aux 3 précédents.'),
+      h('div', { class: 'legend' }, h('span', null, h('span', { class: 'sw sq', style: 'background:var(--s1)' }), 'Lancée par toi'), h('span', null, h('span', { class: 'sw sq', style: 'background:var(--s2)' }), 'Lancée par ce compte')),
+      rows.length ? tListe(['Compte', 'Messages', 'Qui lance la conversation', 'Tu réponds en', 'Ce compte répond en', 'Tendance'],
+        rows.map(p => h('tr', null, tdQui(p), h('td', null, nf(dm(p)), h('div', { class: 'm' }, nf(p.msg_envoyes) + ' envoyés · ' + nf(p.msg_recus) + ' reçus')), lance(p),
+          h('td', null, fduree(p.rep_moi)), h('td', null, fduree(p.rep_autre)), h('td', null, tendance(p))))) : h('div', { class: 'empty' }, 'Aucun compte avec au moins 10 messages.')));
+}
+
+/* ---------- Ce qu'Instagram sait de toi ---------- */
+function barresTop(top) {
+  const mx = Math.max(1, ...top.map(x => x[1])), grid = h('div', { class: 'bars' });
+  top.forEach(([u, v]) => grid.append(h('div', { class: 'who' }, '@' + u), h('div', { class: 'track' }, h('div', { class: 'seg', style: 'width:' + (100 * v / mx) + '%;background:var(--s1)' })), h('div', { class: 'val' }, nf(v))));
+  return grid;
+}
+function drawSait() {
+  const S = D.sait || {}, pubs = S.pubs || { n: 0, top: [] }, videos = S.videos || { n: 0, top: [] }, ann = S.annonceurs || [];
+  const nj = x => x.debut && x.fin ? Math.max(1, Math.round((x.fin - x.debut) / JOUR)) : null;
+  const sur = x => nj(x) ? ' en ' + nj(x) + (nj(x) > 1 ? ' jours' : ' jour') : '';
+  const distincts = new Set(ann.flatMap(a => a.noms)).size;
+  panels.sait.replaceChildren(...[
+    h('div', { class: 'kpis' },
+      kpi(distincts, 'annonceurs ont tes coordonnées ou ton activité'),
+      kpi(pubs.n, 'publicités vues' + sur(pubs)),
+      kpi(videos.n, 'vidéos regardées' + sur(videos)),
+      kpi(S.contacts || 0, 'contacts de ton téléphone synchronisés'),
+      kpi((S.lieux || []).length, 'lieux associés à ton profil'),
+      kpi(S.connexions || 0, 'connexions enregistrées')),
+    ann.length ? h('div', { class: 'card section' }, h('h2', null, 'Annonceurs qui utilisent tes données'),
+      h('p', { class: 'sub' }, 'Les intitulés sont ceux d’Instagram. Une « liste d’audience » est un fichier de clients (e-mails, numéros) qu’un annonceur envoie à Meta pour retrouver ces personnes.'),
+      ann.map(a => h('details', { class: 'more' }, h('summary', null, h('b', null, nf(a.noms.length) + ' '), a.label), h('p', null, a.noms.slice().sort((x, y) => x.localeCompare(y, 'fr')).join(' · '))))) : null,
+    (S.categories || []).length ? h('div', { class: 'card section' }, h('h2', null, 'Catégories utilisées pour te cibler'),
+      h('p', { class: 'sub' }, 'Étiquettes que Meta t’attribue et que les annonceurs peuvent choisir.'),
+      h('div', { class: 'chips' }, S.categories.map(c => h('span', null, c)))) : null,
+    pubs.top.length ? h('div', { class: 'card section' }, h('h2', null, 'Comptes dont tu as vu le plus de publicités'),
+      h('p', { class: 'sub' }, nf(pubs.n) + ' publicités enregistrées' + sur(pubs) + '.'), barresTop(pubs.top)) : null,
+    videos.top.length ? h('div', { class: 'card section' }, h('h2', null, 'Comptes dont tu as regardé le plus de vidéos'),
+      h('p', { class: 'sub' }, nf(videos.n) + ' vidéos enregistrées' + sur(videos) + '. Instagram garde la trace de chaque vidéo regardée.'), barresTop(videos.top)) : null,
+    (S.lieux || []).length || (S.base || []).length ? h('div', { class: 'card section' }, h('h2', null, 'Lieux'),
+      h('p', { class: 'sub' }, 'Lieux qu’Instagram associe à ton profil. Masqués par défaut : clique pour les afficher.'),
+      (S.base || []).length ? h('details', { class: 'more' }, h('summary', null, 'Lieu où ton profil est basé selon Instagram'), h('p', null, S.base.map(b => b[0] + ' : ' + b[1]).join(' · '))) : null,
+      (S.lieux || []).length ? h('details', { class: 'more' }, h('summary', null, h('b', null, S.lieux.length + ' '), 'lieux d’intérêt'), h('p', null, S.lieux.join(' · '))) : null) : null,
+    h('div', { class: 'card section' }, h('h2', null, 'Autres traces'),
+      h('ul', { class: 'bilan' },
+        h('li', null, nf(S.recherches || 0) + ' recherches récentes enregistrées.'),
+        h('li', null, nf(S.liens || 0) + ' liens ouverts depuis Instagram, avec l’heure de début et de fin de visite.'),
+        h('li', null, nf((S.posts || {}).n || 0) + ' publications vues enregistrées' + sur(S.posts || {}) + '.')),
+      h('p', { class: 'sub' }, 'Pour limiter le ciblage : Paramètres → Espace Comptes → Préférences publicitaires. Pour retirer tes contacts : Espace Comptes → Tes informations et autorisations → Importer des contacts.'))
+  ].filter(Boolean));
+}
+
+/* ---------- Insights pro (compte professionnel) ---------- */
+function drawInsights() {
+  const I = D.insights || [];
+  if (!I.length) {
+    panels.pro.replaceChildren(h('div', { class: 'card' },
+      h('h2', null, 'Statistiques de compte professionnel'),
+      h('p', null, 'Ton export ne contient pas de statistiques professionnelles. Meta ne calcule la couverture, les impressions, les visites de profil et le profil de ton audience que pour les comptes professionnels (créateur ou entreprise), et ne les fournit que dans leur export.'),
+      h('p', null, 'Le script ne peut pas les recalculer : elles dépendent de ce que font des personnes qui ne figurent pas dans ton export.'),
+      h('p', null, 'Pour les obtenir : Paramètres → Type de compte et outils → Passer à un compte professionnel. C’est gratuit, mais un compte professionnel est forcément public. Demande ensuite un nouvel export : cet onglet affichera les tableaux qu’il contient.')));
+    return;
+  }
+  const TITRES = { audience_insights: 'Audience', content_interactions: 'Interactions avec ton contenu', profiles_reached: 'Comptes touchés', stories: 'Stories', posts: 'Publications', reels: 'Reels', live_videos: 'Vidéos en direct' };
+  const nombre = v => { const x = parseFloat(String(v == null ? '' : v).replace(/\s/g, '').replace(',', '.')); return /^[\d\s.,]+$/.test(String(v == null ? '' : v).trim()) && isFinite(x) ? x : null; };
+  const estDate = v => /^\d{4}-\d{2}-\d{2}$/.test(String(v));
+  panels.pro.replaceChildren(h('p', { class: 'sub' }, 'Statistiques fournies par Instagram pour ton compte professionnel, avec ses propres intitulés.'),
+    ...I.map(t => {
+      const L = t.lignes, cols = [...new Set(L.flatMap(l => Object.keys(l)))], titre = TITRES[t.fichier] || t.fichier.replace(/_/g, ' ');
+      if (L.length === 1) {   // un seul relevé : une ligne par indicateur
+        return h('div', { class: 'card section' }, h('h2', null, titre),
+          tListe(['Indicateur', 'Valeur'], cols.map(c => h('tr', null, h('td', null, c), h('td', { class: 'm' }, String(L[0][c]))))));
+      }
+      const colDate = cols.find(c => L.filter(l => estDate(l[c])).length >= 0.8 * L.length);
+      // Instagram ne remplit pas toutes les colonnes pour toutes les lignes : on trace la plus parlante
+      const total = c => L.reduce((a, l) => a + (nombre(l[c]) || 0), 0);
+      const colsNum = cols.filter(c => c !== colDate && L.filter(l => nombre(l[c]) != null).length >= 0.2 * L.length && total(c) > 0).sort((a, b) => total(b) - total(a));
+      let graphique = null;
+      if (colDate && colsNum.length && L.length >= 8) {
+        const c = colsNum.find(x => !/impression/i.test(x)) || colsNum[0], pts = L.filter(l => estDate(l[colDate]) && nombre(l[c]) != null).map(l => ({ d: l[colDate], v: nombre(l[c]) })).sort((a, b) => a.d < b.d ? -1 : 1);
+        const Wd = 1000, Hd = 220, m = { l: 40, r: 10, t: 10, b: 26 }, pw = Wd - m.l - m.r, ph = Hd - m.t - m.b;
+        const mx = Math.max(1, ...pts.map(p => p.v)), step = pas(mx), top = Math.ceil(mx / step) * step, slot = pw / pts.length, every = Math.ceil(pts.length / 10);
+        const sv = s('svg', { viewBox: '0 0 ' + Wd + ' ' + Hd, role: 'img', 'aria-label': c + ' par date' });
+        for (let v = 0; v <= top; v += step) {
+          const y = m.t + ph - ph * v / top;
+          sv.append(s('line', { x1: m.l, x2: Wd - m.r, y1: y, y2: y, stroke: v ? 'var(--grid)' : 'var(--axis)' }), s('text', { class: 'axis-t', x: m.l - 6, y: y + 4, 'text-anchor': 'end' }, v));
+        }
+        pts.forEach((p, i) => {
+          const x0 = m.l + i * slot, bw = Math.max(1, Math.min(40, slot - 2)), hh = ph * p.v / top, quand = new Date(p.d + 'T12:00:00');
+          if (p.v) sv.append(s('rect', { class: 'bar', x: x0 + (slot - bw) / 2, y: m.t + ph - hh, width: bw, height: hh, rx: Math.min(4, hh / 2, bw / 3) }));
+          if (i % every === 0) sv.append(s('text', { class: 'axis-t', x: x0 + slot / 2, y: Hd - 8, 'text-anchor': i === 0 ? 'start' : 'middle' }, quand.toLocaleDateString('fr-FR', { month: 'short', year: '2-digit' })));
+          const hit = s('rect', { class: 'hit', x: x0, y: m.t, width: slot, height: ph });
+          hit.addEventListener('pointermove', e => showTip(e, h('b', null, quand.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })), h('div', null, c + ' : ' + nf(p.v))));
+          hit.addEventListener('pointerleave', hideTip);
+          sv.append(hit);
+        });
+        const moy = pts.reduce((a, p) => a + p.v, 0) / pts.length, meilleur = pts.reduce((a, p) => p.v > a.v ? p : a, pts[0]);
+        graphique = [h('h3', null, c + ', par ' + (t.fichier === 'stories' ? 'story' : 'élément')),
+          h('p', { class: 'sub' }, (pts.length < L.length ? 'Instagram ne fournit ce chiffre que pour ' + nf(pts.length) + ' des ' + nf(L.length) + ' lignes. ' : nf(pts.length) + ' relevés. ') + 'Moyenne ' + nf(moy) + ', maximum ' + nf(meilleur.v) + ' le ' + new Date(meilleur.d + 'T12:00:00').toLocaleDateString('fr-FR') + '.'),
+          h('div', { class: 'stories' }, sv)];
+      }
+      const vus = cols.slice(0, 10);
+      return h('div', { class: 'card section' }, h('h2', null, titre), graphique,
+        h('details', { class: 'more' }, h('summary', null, 'Voir le tableau (' + L.length + ' lignes' + (L.length > 50 ? ', les 50 premières' : '') + ')'),
+          tListe(vus, L.slice(0, 50).map(l => h('tr', null, vus.map(c => h('td', null, l[c] == null ? '' : String(l[c]))))))));
+    }));
+}
+
+/* ---------- Stories (Instagram Plus, saisies dans stories_plus.csv) ---------- */
+function pas(mx) {
+  const raw = mx / 4, p10 = Math.pow(10, Math.floor(Math.log10(Math.max(raw, 1)))), f = raw / p10;
+  return Math.max(1, (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p10);
+}
+function barresStories(val, unite) {
+  const Wd = 1000, Hd = 220, m = { l: 40, r: 10, t: 10, b: 26 }, pw = Wd - m.l - m.r, ph = Hd - m.t - m.b;
+  const mx = Math.max(1, ...STORIES.map(x => val(x) || 0)), step = pas(mx), top = Math.ceil(mx / step) * step;
+  const slot = Math.min(70, pw / STORIES.length), every = Math.ceil(STORIES.length / 14);
+  const sv = s('svg', { viewBox: '0 0 ' + Wd + ' ' + Hd, role: 'img' });
+  for (let v = 0; v <= top; v += step) {
+    const y = m.t + ph - ph * v / top;
+    sv.append(s('line', { x1: m.l, x2: Wd - m.r, y1: y, y2: y, stroke: v ? 'var(--grid)' : 'var(--axis)' }), s('text', { class: 'axis-t', x: m.l - 6, y: y + 4, 'text-anchor': 'end' }, v));
+  }
+  STORIES.forEach((x, i) => {
+    const v = val(x), x0 = m.l + i * slot, bw = Math.min(40, slot - 2), hh = ph * (v || 0) / top;
+    const jour = new Date(x.date * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    if (v) sv.append(s('rect', { class: 'bar', x: x0 + (slot - bw) / 2, y: m.t + ph - hh, width: bw, height: hh, rx: Math.min(4, hh / 2, bw / 3) }));
+    if (i % every === 0) sv.append(s('text', { class: 'axis-t', x: x0 + slot / 2, y: Hd - 8, 'text-anchor': 'middle' }, jour));
+    const hit = s('rect', { class: 'hit', x: x0, y: m.t, width: slot, height: ph });
+    hit.addEventListener('pointermove', e => showTip(e, h('b', null, x.titre || 'Story'), h('div', { class: 'm' }, fdate(x.date)),
+      h('div', null, v == null ? 'Non renseigné' : nf(v) + ' ' + unite)));
+    hit.addEventListener('pointerleave', hideTip);
+    sv.append(hit);
+  });
+  return sv;
+}
+function drawStories() {
+  const N = STORIES.length;
+  if (!N) {
+    panels.stories.replaceChildren(h('div', { class: 'card' },
+      h('h2', null, 'Suivi de tes stories avec Instagram Plus'),
+      h('p', null, 'Instagram n’exporte ni la liste des spectateurs de tes stories ni le compteur de revisionnages. Pour les ajouter au graphique, note-les dans le fichier stories_plus.csv, à côté de cette page, tant que la story est en ligne :'),
+      h('ul', null,
+        h('li', null, 'une ligne par story : date ; titre ; total de revisionnages ; pseudos des spectateurs séparés par des virgules ;'),
+        h('li', null, 'si Instagram Plus indique combien de fois une personne a vu la story, écris pseudo:3 ;'),
+        h('li', null, 'relance ensuite le script.')),
+      h('p', { class: 'sub' }, 'Exemple inventé, pour montrer le format. Tu n’as encore enregistré aucune story.'),
+      h('pre', null, 'date;story;revisionnages;spectateurs\n2026-01-31;Titre de ta story;12;pseudo_ami_1, pseudo_ami_2:3, pseudo_ami_3')));
+    return;
+  }
+  const avecRev = STORIES.filter(x => x.revisionnages != null);
+  const fans = P.filter(p => p.a_vu_stories > 0).sort((a, b) => (b.a_vu_stories + b.revisionnages) - (a.a_vu_stories + a.revisionnages) || b.score - a.score);
+  const detailRev = fans.some(p => p.revisionnages > 0);
+  const mx = Math.max(1, ...fans.map(p => p.a_vu_stories + p.revisionnages));
+  const grid = h('div', { class: 'bars' });
+  fans.slice(0, 20).forEach(p => {
+    const track = h('div', { class: 'track' },
+      h('div', { class: 'seg', style: 'width:' + (100 * p.a_vu_stories / mx) + '%;background:var(--s1)' }),
+      p.revisionnages ? h('div', { class: 'seg', style: 'width:' + (100 * p.revisionnages / mx) + '%;background:var(--s2)' }) : null);
+    track.addEventListener('pointermove', e => showTip(e, h('b', null, nom(p)), h('div', null, 'A vu ' + p.a_vu_stories + ' de tes ' + N + ' stories'),
+      detailRev ? h('div', null, nf(p.revisionnages) + (p.revisionnages > 1 ? ' revisionnages' : ' revisionnage')) : null));
+    track.addEventListener('pointerleave', hideTip);
+    grid.append(h('div', { class: 'who' }, h('button', { title: 'Voir dans le réseau', onclick: () => { setTab('reseau'); select(p.id); } }, nom(p))), track, h('div', { class: 'val' }, p.a_vu_stories + '/' + N));
+  });
+  const kpi2 = (v, l) => h('div', { class: 'card kpi' }, h('div', { class: 'v' }, nf(v)), h('div', { class: 'l' }, l));
+  panels.stories.replaceChildren(...[
+    h('div', { class: 'kpis' },
+      kpi2(N, N > 1 ? 'stories enregistrées' : 'story enregistrée'),
+      kpi2(STORIES.reduce((a, x) => a + x.spectateurs, 0) / N, 'spectateurs par story en moyenne'),
+      kpi2(fans.length, 'spectateurs différents'),
+      avecRev.length ? kpi2(avecRev.reduce((a, x) => a + x.revisionnages, 0), 'revisionnages au total') : null),
+    h('div', { class: 'card stories', style: 'margin-bottom:12px' }, h('h2', null, 'Spectateurs par story'),
+      h('p', { class: 'sub' }, 'Nombre de pseudos notés pour chaque story dans stories_plus.csv.'), barresStories(x => x.spectateurs, 'spectateurs')),
+    avecRev.length ? h('div', { class: 'card stories', style: 'margin-bottom:12px' }, h('h2', null, 'Revisionnages par story'),
+      h('p', { class: 'sub' }, 'Total affiché par Instagram Plus, ou somme des revisionnages notés par personne.'), barresStories(x => x.revisionnages, 'revisionnages')) : null,
+    h('div', { class: 'card' }, h('h2', null, 'Tes spectateurs les plus fidèles'),
+      h('p', { class: 'sub' }, 'Nombre de tes ' + N + ' stories enregistrées vues par chaque compte' + (detailRev ? ', plus ses revisionnages.' : '.')),
+      detailRev ? h('div', { class: 'legend' }, h('span', null, h('span', { class: 'sw sq', style: 'background:var(--s1)' }), 'Stories vues'), h('span', null, h('span', { class: 'sw sq', style: 'background:var(--s2)' }), 'Revisionnages')) : null,
+      fans.length ? grid : h('div', { class: 'empty' }, 'Aucun spectateur noté pour l’instant.'))
+  ].filter(Boolean));
+}
+
+/* ---------- Chronologie ---------- */
+function drawChrono() {
+  const sets = [['Comptes que tu as commencé à suivre, par mois', 'suivi_depuis', 'Seuls les comptes que tu suis encore aujourd’hui apparaissent.'],
+                ['Comptes qui ont commencé à te suivre, par mois', 'abonne_depuis', 'Seuls les abonnés présents dans l’export apparaissent.']];
+  const all = P.flatMap(p => [p.suivi_depuis, p.abonne_depuis]).filter(Boolean);
+  if (!all.length) { panels.chrono.replaceChildren(h('div', { class: 'card empty' }, 'Aucune date d’abonnement dans cet export.')); return; }
+  const months = moisEntre(mkey(Math.min(...all)), mkey(Math.max(...all)));
+  const groups = sets.map(([title, key, note]) => {
+    const by = new Map(months.map(m => [m, []]));
+    P.forEach(p => { if (p[key]) by.get(mkey(p[key])).push(p); });
+    return { title, note, by };
+  });
+  const ymax = Math.max(1, ...groups.flatMap(g => [...g.by.values()].map(a => a.length)));
+  const step = ymax <= 5 ? 1 : ymax <= 12 ? 2 : ymax <= 30 ? 5 : ymax <= 60 ? 10 : 20, top = Math.ceil(ymax / step) * step;
+  const Wd = 1000, Hd = 230, m = { l: 34, r: 10, t: 10, b: 26 }, pw = Wd - m.l - m.r, ph = Hd - m.t - m.b, bw = pw / months.length;
+  const cards = groups.map(g => {
+    const sv = s('svg', { viewBox: '0 0 ' + Wd + ' ' + Hd, role: 'img', 'aria-label': g.title });
+    for (let v = 0; v <= top; v += step) {
+      const y = m.t + ph - ph * v / top;
+      sv.append(s('line', { x1: m.l, x2: Wd - m.r, y1: y, y2: y, stroke: v ? 'var(--grid)' : 'var(--axis)' }), s('text', { class: 'axis-t', x: m.l - 6, y: y + 4, 'text-anchor': 'end' }, v));
+    }
+    months.forEach((k, i) => {
+      const arr = g.by.get(k), x = m.l + i * bw, hh = ph * arr.length / top, mo = +k.slice(5);
+      if (mo === 1 || i === 0) sv.append(s('text', { class: 'axis-t', x: x + bw / 2, y: Hd - 8, 'text-anchor': i === 0 && mo > 9 ? 'start' : 'middle' }, mo === 1 ? k.slice(0, 4) : ''));
+      if (mo === 1) sv.append(s('line', { x1: x, x2: x, y1: m.t + ph, y2: m.t + ph + 4, stroke: 'var(--axis)' }));
+      if (arr.length) sv.append(s('rect', { class: 'bar', x: x + 1, y: m.t + ph - hh, width: Math.max(1, bw - 2), height: hh, rx: Math.min(4, hh / 2, bw / 3) }));
+      const hit = s('rect', { class: 'hit', x, y: m.t, width: bw, height: ph });
+      hit.addEventListener('pointermove', e => showTip(e, h('b', null, mlabel(k)), h('div', null, arr.length + (arr.length > 1 ? ' comptes' : ' compte')),
+        arr.slice(0, 10).map(p => h('div', { class: 'm' }, nom(p) + ' · ' + sdate(p.suivi_depuis && g === groups[0] ? p.suivi_depuis : p.abonne_depuis))),
+        arr.length > 10 ? h('div', { class: 'm' }, '… et ' + (arr.length - 10) + ' autres') : null));
+      hit.addEventListener('pointerleave', hideTip);
+      sv.append(hit);
+    });
+    return h('div', { class: 'card chrono', style: 'margin-bottom:12px' }, h('h2', null, g.title), h('p', { class: 'sub' }, g.note), sv);
+  });
+  panels.chrono.replaceChildren(...cards);
+}
+
+/* ---------- Tableau ---------- */
+const COLS = [
+  ['Compte', p => nom(p), p => nom(p).toLowerCase(), ''], ['Lien', p => LIENS[p.lien].label.replace(/ \(.*/, ''), p => ORDER.indexOf(p.lien), ''],
+  ['Score', p => nf(p.score), p => p.score, 'num'], ['Msg envoyés', p => nf(p.msg_envoyes), p => p.msg_envoyes, 'num'], ['Msg reçus', p => nf(p.msg_recus), p => p.msg_recus, 'num'],
+  ['Likes posts', p => nf(p.likes_posts), p => p.likes_posts, 'num'], ['Likes stories', p => nf(p.likes_stories), p => p.likes_stories, 'num'], ['Stories vues', p => nf(p.stories_vues), p => p.stories_vues, 'num'],
+  ['Tu suis depuis', p => sdate(p.suivi_depuis), p => p.suivi_depuis, 'num'], ['Te suit depuis', p => sdate(p.abonne_depuis), p => p.abonne_depuis, 'num'],
+];
+if (STORIES.length) COLS.splice(8, 0, ['A vu tes stories', p => nf(p.a_vu_stories), p => p.a_vu_stories, 'num'], ['Revisionnages', p => nf(p.revisionnages), p => p.revisionnages, 'num']);
+function drawTable() {
+  const { k, d } = state.sort, get = COLS.find(c => c[0] === k)[2];
+  const rows = visible().filter(match).sort((a, b) => {
+    const x = get(a), y = get(b);
+    if (x == null || y == null) return (x == null) - (y == null);
+    return (x < y ? -1 : x > y ? 1 : 0) * d || b.score - a.score;
+  });
+  const head = COLS.map(c => h('th', { class: c[3], 'aria-sort': c[0] === k ? (d > 0 ? 'ascending' : 'descending') : null,
+    onclick: () => { state.sort = { k: c[0], d: c[0] === k ? -d : (c[3] ? -1 : 1) }; drawTable(); } }, c[0] + (c[0] === k ? (d > 0 ? ' ▲' : ' ▼') : '')));
+  const body = rows.map(p => {
+    const cells = COLS.map(c => h('td', { class: c[3] }, c[1](p)));
+    return h('tr', { onclick: () => { setTab('reseau'); select(p.id); } }, cells);
+  });
+  const table = h('table', { id: 'table' }, h('thead', null, h('tr', null, head)), h('tbody', null, body));
+  panels.table.replaceChildren(h('div', { class: 'card' },
+    h('p', { class: 'sub' }, rows.length + ' comptes. Clique sur un en-tête pour trier, sur une ligne pour voir le détail.'),
+    h('div', { class: 'tablewrap' }, table)));
+}
+
+function refresh() { drawGraph(); drawTable(); }
+setTab('reseau'); drawDetail(); drawGraph(); drawIdees(); drawAbonnes(); drawConv(); drawTop(); drawStories(); drawChrono(); drawTable(); drawSait(); drawInsights();
+})();
+</script>
+</body>
+</html>
